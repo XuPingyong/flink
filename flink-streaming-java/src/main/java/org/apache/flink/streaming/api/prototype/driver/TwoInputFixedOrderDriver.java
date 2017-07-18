@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.input;
+package org.apache.flink.streaming.api.prototype.driver;
 
-public interface ArbitrarilyInput extends InputOrder {
+/**
+ *
+ */
+public class TwoInputFixedOrderDriver {
+
+
 }

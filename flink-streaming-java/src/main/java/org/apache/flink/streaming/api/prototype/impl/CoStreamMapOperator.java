@@ -20,12 +20,12 @@ package org.apache.flink.streaming.api.prototype.impl;
 
 import org.apache.flink.streaming.api.prototype.operator.AbstractTwoInputStreamRecordOperator;
 import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.api.prototype.input.ArbitrarilyInput;
+import org.apache.flink.streaming.api.prototype.input.ArbitraryInputOrder;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 
 public class CoStreamMapOperator<IN1, IN2, OUT>
 		extends AbstractTwoInputStreamRecordOperator<IN1, IN2, OUT>
-		implements ArbitrarilyInput {
+		implements ArbitraryInputOrder {
 
 	@Override
 	protected Processor<StreamRecord<IN1>> getProcessor1() {

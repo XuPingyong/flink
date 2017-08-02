@@ -22,6 +22,7 @@ import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.JobID;
 import org.apache.flink.api.common.Plan;
 import org.apache.flink.api.common.PlanExecutor;
+import org.apache.flink.api.common.ProgramExecutor;
 import org.apache.flink.client.program.ClusterClient;
 import org.apache.flink.client.program.JobWithJars;
 import org.apache.flink.client.program.StandaloneClusterClient;
@@ -43,7 +44,7 @@ import org.apache.flink.streaming.api.graph.StreamGraph;
 import java.io.IOException;
 
 /**
- * The RemoteExecutor is a {@link org.apache.flink.api.common.Executor} that takes the program or streamGraph
+ * The RemoteExecutor is a {@link ProgramExecutor} that takes the program or streamGraph
  * and ships it to a remote Flink cluster for execution.
  *
  * <p>The RemoteExecutor is pointed at the JobManager and gets the program and (if necessary) the

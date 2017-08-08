@@ -41,8 +41,6 @@ import java.util.List;
 import org.apache.flink.streaming.api.environment.StreamGraphExecutor;
 import org.apache.flink.streaming.api.graph.StreamGraph;
 
-import java.io.IOException;
-
 /**
  * The RemoteExecutor is a {@link ProgramExecutor} that takes the program or streamGraph
  * and ships it to a remote Flink cluster for execution.
@@ -114,13 +112,6 @@ public class RemoteExecutor implements PlanExecutor, StreamGraphExecutor {
 			List<URL> jarFiles, List<URL> globalClasspaths) {
 		this.clientConfiguration = clientConfiguration;
 		this.jarFiles = jarFiles;
-		for (URL jarFileUrl : jarFiles) {
-			try {
-				JobWithJars.checkJarFile(jarFileUrl);
-			} catch (IOException e) {
-				throw new RuntimeException("Problem with jar file " + jarFileUrl, e);
-			}
-		}
 		this.globalClasspaths = globalClasspaths;
 		clientConfiguration.setString(JobManagerOptions.ADDRESS, inet.getHostName());
 		clientConfiguration.setInteger(JobManagerOptions.PORT, inet.getPort());
@@ -213,6 +204,9 @@ public class RemoteExecutor implements PlanExecutor, StreamGraphExecutor {
 	// ------------------------------------------------------------------------
 	@Override
 	public JobExecutionResult executeStreamGraph(StreamGraph streamGraph) throws Exception {
+		for (URL jarFileUrl : jarFiles) {
+			JobWithJars.checkJarFile(jarFileUrl);
+		}
 		ClassLoader userCodeClassLoader = JobWithJars.buildUserCodeClassLoader(jarFiles, globalClasspaths,
 				getClass().getClassLoader());
 

@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.operator;
+package org.apache.flink.streaming.api.prototype.processor;
 
-import java.util.Collection;
+import org.apache.flink.streaming.api.watermark.Watermark;
+import org.apache.flink.streaming.runtime.streamrecord.LatencyMarker;
 
-import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
+public interface ControlElementProcessor {
 
-public interface NAryInputOperator {
+	Processor<Watermark> getWatermarkProcessor() throws Exception;
 
-	Collection<InputProcessor> getInputProcessors();
-
+	Processor<LatencyMarker> getLatencyMarkerProcessor() throws Exception;
 }

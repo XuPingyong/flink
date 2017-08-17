@@ -16,22 +16,33 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.impl;
+package org.apache.flink.streaming.api.prototype.operator.oneinput.iterator;
 
-import org.apache.flink.streaming.api.prototype.operator.oneinput.AbstractOneInputStreamRecordOperator;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
+import org.apache.flink.core.memory.DataInputView;
+import org.apache.flink.util.MutableObjectIterator;
 
-public class MapOperator<IN, OUT>
-		extends AbstractOneInputStreamRecordOperator<IN, OUT> {
+import java.io.IOException;
 
-	@Override
-	protected Processor<StreamRecord<IN>> getProcessor() {
-		return new Processor<StreamRecord<IN>>() {
+public abstract class AbstractOneInputElementIteratorOperator<IN, OUT>
+		extends AbstractOneInputIteratorOperator<IN, OUT>
+{
+
+	public void run(MutableObjectIterator<DataInputView> input) {
+		runWithElement(new MutableObjectIterator<IN>() {
+
 			@Override
-			public void process(StreamRecord<IN> record) throws Exception {
-
+			public IN next(IN reuse) throws IOException {
+				IN element = null; // FIXME: deserialize user element]
+				return element;
 			}
-		};
+
+			@Override
+			public IN next() throws IOException {
+				IN element = null; // FIXME: deserialize user element]
+				return element;
+			}
+		});
 	}
+
+	public abstract void runWithElement(MutableObjectIterator<IN> input);
 }

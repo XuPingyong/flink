@@ -16,26 +16,15 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.operator;
+package org.apache.flink.streaming.api.prototype.operator.naryinput;
 
-import org.apache.flink.core.memory.DataInputView;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.api.prototype.processor.ElementProcessorWrapper;
+import org.apache.flink.streaming.api.prototype.processor.ControlElementProcessor;
+import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
 
-public abstract class AbstractTwoInputElementOperator <IN1, IN2, OUT>
-		extends AbstractTwoInputOperator<OUT> {
+import java.util.Collection;
 
-	@Override
-	protected Processor<DataInputView> getDataProcessor1() {
-		return new ElementProcessorWrapper<>(getProcessor1());
-	}
+public interface NAryIteratorInputOperator {
 
-	@Override
-	protected Processor<DataInputView> getDataProcessor2() {
-		return new ElementProcessorWrapper<>(getProcessor2());
-	}
+	Collection<ControlElementProcessor> getControlElementProcessor();
 
-	protected abstract Processor<IN1> getProcessor1();
-
-	protected abstract Processor<IN2> getProcessor2();
 }

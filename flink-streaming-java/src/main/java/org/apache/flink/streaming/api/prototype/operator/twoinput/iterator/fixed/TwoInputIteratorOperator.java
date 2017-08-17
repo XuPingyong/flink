@@ -16,20 +16,21 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.operator;
+package org.apache.flink.streaming.api.prototype.operator.twoinput.iterator.fixed;
 
 import org.apache.flink.core.memory.DataInputView;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.api.prototype.processor.ElementProcessorWrapper;
+import org.apache.flink.streaming.api.prototype.input.FixedInputOrder;
+import org.apache.flink.streaming.api.prototype.processor.ControlElementProcessor;
+import org.apache.flink.util.MutableObjectIterator;
 
-public abstract class AbstractOneInputElementOperator<IN, OUT>
-		extends AbstractOneInputOperator<IN, OUT>  {
+public interface TwoInputIteratorOperator extends FixedInputOrder {
 
-	@Override
-	protected Processor<DataInputView> getDataProcessor() {
-		return new ElementProcessorWrapper<>(getProcessor());
-	}
+	ControlElementProcessor getControlElementProcessor1();
 
-	protected abstract Processor<IN> getProcessor();
+	ControlElementProcessor getControlElementProcessor2();
+
+	void runInput1(MutableObjectIterator<DataInputView> input);
+
+	void runInput2(MutableObjectIterator<DataInputView> input);
 
 }

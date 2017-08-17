@@ -16,22 +16,14 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.impl;
+package org.apache.flink.streaming.api.prototype.operator.naryinput;
 
-import org.apache.flink.streaming.api.prototype.operator.oneinput.AbstractOneInputStreamRecordOperator;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
+import java.util.Collection;
 
-public class MapOperator<IN, OUT>
-		extends AbstractOneInputStreamRecordOperator<IN, OUT> {
+import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
 
-	@Override
-	protected Processor<StreamRecord<IN>> getProcessor() {
-		return new Processor<StreamRecord<IN>>() {
-			@Override
-			public void process(StreamRecord<IN> record) throws Exception {
+public interface NAryInputOperator {
 
-			}
-		};
-	}
+	Collection<InputProcessor> getInputProcessors();
+
 }

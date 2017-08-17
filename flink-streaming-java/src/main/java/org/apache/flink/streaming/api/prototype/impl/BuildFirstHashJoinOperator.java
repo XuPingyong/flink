@@ -18,7 +18,7 @@
 
 package org.apache.flink.streaming.api.prototype.impl;
 
-import org.apache.flink.streaming.api.prototype.operator.AbstractTwoInputElementOperator;
+import org.apache.flink.streaming.api.prototype.operator.twoinput.AbstractTwoInputElementOperator;
 import org.apache.flink.streaming.api.prototype.processor.Processor;
 import org.apache.flink.streaming.api.prototype.input.FixedInputOrder;
 

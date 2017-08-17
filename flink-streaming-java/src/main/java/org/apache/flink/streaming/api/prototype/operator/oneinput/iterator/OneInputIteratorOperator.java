@@ -16,22 +16,15 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.impl;
+package org.apache.flink.streaming.api.prototype.operator.oneinput.iterator;
 
-import org.apache.flink.streaming.api.prototype.operator.oneinput.AbstractOneInputStreamRecordOperator;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
+import org.apache.flink.core.memory.DataInputView;
+import org.apache.flink.streaming.api.prototype.processor.ControlElementProcessor;
+import org.apache.flink.util.MutableObjectIterator;
 
-public class MapOperator<IN, OUT>
-		extends AbstractOneInputStreamRecordOperator<IN, OUT> {
+public interface OneInputIteratorOperator {
 
-	@Override
-	protected Processor<StreamRecord<IN>> getProcessor() {
-		return new Processor<StreamRecord<IN>>() {
-			@Override
-			public void process(StreamRecord<IN> record) throws Exception {
+	ControlElementProcessor getControlElementProcessor();
 
-			}
-		};
-	}
+	void run(MutableObjectIterator<DataInputView> input);
 }

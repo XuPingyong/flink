@@ -18,7 +18,7 @@
 
 package org.apache.flink.streaming.api.prototype.impl;
 
-import org.apache.flink.streaming.api.prototype.operator.AbstractOneInputElementOperator;
+import org.apache.flink.streaming.api.prototype.operator.oneinput.AbstractOneInputElementOperator;
 import org.apache.flink.streaming.api.prototype.processor.Processor;
 
 public class GroupReduceOperator<IN, OUT>

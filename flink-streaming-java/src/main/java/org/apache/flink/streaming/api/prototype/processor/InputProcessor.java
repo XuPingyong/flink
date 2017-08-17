@@ -19,15 +19,9 @@
 package org.apache.flink.streaming.api.prototype.processor;
 
 import org.apache.flink.core.memory.DataInputView;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.api.watermark.Watermark;
-import org.apache.flink.streaming.runtime.streamrecord.LatencyMarker;
 
-public interface InputProcessor {
+public interface InputProcessor extends ControlElementProcessor {
 
 	Processor<DataInputView> getDataProcessor() throws Exception;
 
-	Processor<Watermark> getWatermarkProcessor() throws Exception;
-
-	Processor<LatencyMarker> getLatencyMarkerProcessor() throws Exception;
 }

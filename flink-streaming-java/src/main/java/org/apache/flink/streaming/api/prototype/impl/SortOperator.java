@@ -19,7 +19,7 @@
 package org.apache.flink.streaming.api.prototype.impl;
 
 import org.apache.flink.core.memory.DataInputView;
-import org.apache.flink.streaming.api.prototype.operator.AbstractOneInputOperator;
+import org.apache.flink.streaming.api.prototype.operator.oneinput.AbstractOneInputOperator;
 import org.apache.flink.streaming.api.prototype.processor.Processor;
 
 public class SortOperator<IN, OUT> extends AbstractOneInputOperator<IN, OUT> {

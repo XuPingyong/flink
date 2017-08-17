@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.operator;
+package org.apache.flink.streaming.api.prototype.operator.twoinput;
 
 import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.streaming.api.prototype.processor.Processor;

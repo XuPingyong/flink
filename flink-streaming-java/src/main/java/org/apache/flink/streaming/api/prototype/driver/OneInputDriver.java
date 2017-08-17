@@ -20,7 +20,7 @@ package org.apache.flink.streaming.api.prototype.driver;
 
 import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.runtime.io.network.partition.consumer.BufferOrEvent;
-import org.apache.flink.streaming.api.prototype.operator.OneInputOperator;
+import org.apache.flink.streaming.api.prototype.operator.oneinput.OneInputOperator;
 import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
 import org.apache.flink.streaming.api.prototype.processor.Processor;
 import org.apache.flink.streaming.api.watermark.Watermark;

@@ -16,14 +16,20 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.operator;
+package org.apache.flink.streaming.api.prototype.operator.oneinput;
 
-import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
+import org.apache.flink.core.memory.DataInputView;
+import org.apache.flink.streaming.api.prototype.processor.ElementProcessorWrapper;
+import org.apache.flink.streaming.api.prototype.processor.Processor;
 
-public interface TwoInputOperator {
+public abstract class AbstractOneInputElementOperator<IN, OUT>
+		extends AbstractOneInputOperator<IN, OUT>  {
 
-	InputProcessor getInputProcessor1();
+	@Override
+	protected Processor<DataInputView> getDataProcessor() {
+		return new ElementProcessorWrapper<>(getProcessor());
+	}
 
-	InputProcessor getInputProcessor2();
+	protected abstract Processor<IN> getProcessor();
 
 }

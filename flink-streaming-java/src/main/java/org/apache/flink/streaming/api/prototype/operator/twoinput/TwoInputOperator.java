@@ -16,22 +16,14 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.impl;
+package org.apache.flink.streaming.api.prototype.operator.twoinput;
 
-import org.apache.flink.streaming.api.prototype.operator.oneinput.AbstractOneInputStreamRecordOperator;
-import org.apache.flink.streaming.api.prototype.processor.Processor;
-import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
+import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
 
-public class MapOperator<IN, OUT>
-		extends AbstractOneInputStreamRecordOperator<IN, OUT> {
+public interface TwoInputOperator {
 
-	@Override
-	protected Processor<StreamRecord<IN>> getProcessor() {
-		return new Processor<StreamRecord<IN>>() {
-			@Override
-			public void process(StreamRecord<IN> record) throws Exception {
+	InputProcessor getInputProcessor1();
 
-			}
-		};
-	}
+	InputProcessor getInputProcessor2();
+
 }

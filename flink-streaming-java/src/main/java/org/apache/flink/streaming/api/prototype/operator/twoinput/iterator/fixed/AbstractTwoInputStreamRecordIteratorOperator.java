@@ -16,54 +16,95 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.api.prototype.operator;
+package org.apache.flink.streaming.api.prototype.operator.twoinput.iterator.fixed;
 
 import org.apache.flink.core.memory.DataInputView;
-import org.apache.flink.streaming.api.prototype.processor.InputProcessor;
+import org.apache.flink.streaming.api.prototype.operator.AbstractOperator;
+import org.apache.flink.streaming.api.prototype.processor.ControlElementProcessor;
 import org.apache.flink.streaming.api.prototype.processor.Processor;
 import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.runtime.streamrecord.LatencyMarker;
+import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
+import org.apache.flink.util.MutableObjectIterator;
 
-public abstract class AbstractTwoInputOperator<OUT>
+import java.io.IOException;
+
+public abstract class AbstractTwoInputStreamRecordIteratorOperator<IN1, IN2, OUT>
 		extends AbstractOperator<OUT>
-		implements TwoInputOperator {
+		implements TwoInputIteratorOperator
+{
 
-	@Override
-	public InputProcessor getInputProcessor1() {
-		return new InputProcessor() {
+	public void runInput1(MutableObjectIterator<DataInputView> input1) {
+		runInput1WithStreamRecord(new MutableObjectIterator<StreamRecord<IN1>>() {
+
 			@Override
-			public Processor<DataInputView> getDataProcessor() throws Exception {
-				return AbstractTwoInputOperator.this.getDataProcessor1();
+			public StreamRecord<IN1> next(StreamRecord<IN1> reuse) throws IOException {
+				StreamRecord<IN1> element = null; // FIXME: deserialize user element]
+				return element;
 			}
 
 			@Override
+			public StreamRecord<IN1> next() throws IOException {
+				StreamRecord<IN1> element = null; // FIXME: deserialize user element]
+				return element;
+			}
+		});
+	}
+
+	public void runInput2(MutableObjectIterator<DataInputView> input2) {
+		runInput2WithStreamRecord(new MutableObjectIterator<StreamRecord<IN2>>() {
+
+			@Override
+			public StreamRecord<IN2> next(StreamRecord<IN2> reuse) throws IOException {
+				StreamRecord<IN2> element = null; // FIXME: deserialize user element]
+				return element;
+			}
+
+			@Override
+			public StreamRecord<IN2> next() throws IOException {
+				StreamRecord<IN2> element = null; // FIXME: deserialize user element]
+				return element;
+			}
+		});
+	}
+
+	public abstract void runInput1WithStreamRecord(MutableObjectIterator<StreamRecord<IN1>> input);
+
+	public abstract void runInput2WithStreamRecord(MutableObjectIterator<StreamRecord<IN2>> input);
+
+	@Override
+	public int[] getInputOrder() {
+		return new int[]{0, 1};
+	}
+
+	@Override
+	public ControlElementProcessor getControlElementProcessor1() {
+		return new ControlElementProcessor() {
+
+			@Override
 			public Processor<Watermark> getWatermarkProcessor() throws Exception {
-				return AbstractTwoInputOperator.this.getWatermarkProcessor1();
+				return AbstractTwoInputStreamRecordIteratorOperator.this.getWatermarkProcessor1();
 			}
 
 			@Override
 			public Processor<LatencyMarker> getLatencyMarkerProcessor() throws Exception {
-				return AbstractTwoInputOperator.this.getLatencyMarkerProcessor1();
+				return AbstractTwoInputStreamRecordIteratorOperator.this.getLatencyMarkerProcessor1();
 			}
 		};
 	}
 
 	@Override
-	public InputProcessor getInputProcessor2() {
-		return new InputProcessor() {
-			@Override
-			public Processor<DataInputView> getDataProcessor() throws Exception {
-				return AbstractTwoInputOperator.this.getDataProcessor2();
-			}
+	public ControlElementProcessor getControlElementProcessor2() {
+		return new ControlElementProcessor() {
 
 			@Override
 			public Processor<Watermark> getWatermarkProcessor() throws Exception {
-				return AbstractTwoInputOperator.this.getWatermarkProcessor2();
+				return AbstractTwoInputStreamRecordIteratorOperator.this.getWatermarkProcessor2();
 			}
 
 			@Override
 			public Processor<LatencyMarker> getLatencyMarkerProcessor() throws Exception {
-				return AbstractTwoInputOperator.this.getLatencyMarkerProcessor2();
+				return AbstractTwoInputStreamRecordIteratorOperator.this.getLatencyMarkerProcessor2();
 			}
 		};
 	}
@@ -103,9 +144,4 @@ public abstract class AbstractTwoInputOperator<OUT>
 			}
 		};
 	}
-
-	protected abstract Processor<DataInputView> getDataProcessor1();
-
-	protected abstract Processor<DataInputView> getDataProcessor2();
-
 }

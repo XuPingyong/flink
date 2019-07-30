@@ -23,8 +23,9 @@ import org.apache.flink.api.java.typeutils.RowTypeInfo
 import org.apache.flink.api.scala._
 import org.apache.flink.table.api.scala._
 import org.apache.flink.table.api.{DataTypes, TableSchema, Types}
+import org.apache.flink.table.planner.runtime.utils.BatchTestBase.row
 import org.apache.flink.table.planner.runtime.utils.{StreamingTestBase, TestData, TestingAppendSink}
-import org.apache.flink.table.planner.utils.{TestFilterableTableSource, TestInputFormatTableSource, TestNestedProjectableTableSource, TestPartitionableTableSource, TestProjectableTableSource, TestTableSources}
+import org.apache.flink.table.planner.utils.{TestDataTypeTableSource, TestFilterableTableSource, TestInputFormatTableSource, TestNestedProjectableTableSource, TestPartitionableTableSource, TestProjectableTableSource, TestTableSources}
 import org.apache.flink.types.Row
 
 import org.junit.Assert._
@@ -399,6 +400,35 @@ class TableSourceITCase extends StreamingTestBase {
       "1,Hi",
       "2,Hello",
       "3,Hello world"
+    )
+    assertEquals(expected.sorted, sink.getAppendResults.sorted)
+  }
+
+  @Test
+  def testDecimalSource(): Unit = {
+    val tableSchema = TableSchema.builder().fields(
+      Array("a", "b"),
+      Array(
+        DataTypes.INT(),
+        DataTypes.DECIMAL(5, 2))).build()
+    val tableSource = new TestDataTypeTableSource(
+      tableSchema, tableSchema.toRowDataType,
+      Seq(
+        row(1, new java.math.BigDecimal(5.1)),
+        row(2, new java.math.BigDecimal(6.1)),
+        row(3, new java.math.BigDecimal(7.1))
+      ))
+    tEnv.registerTableSource("MyInputFormatTable", tableSource)
+
+    val sink = new TestingAppendSink()
+    tEnv.sqlQuery("SELECT a, b FROM MyInputFormatTable").toAppendStream[Row].addSink(sink)
+
+    env.execute()
+
+    val expected = Seq(
+      "1,5.10",
+      "2,6.10",
+      "3,7.10"
     )
     assertEquals(expected.sorted, sink.getAppendResults.sorted)
   }

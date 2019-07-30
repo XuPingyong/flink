@@ -23,7 +23,7 @@ import org.apache.flink.api.java.typeutils.RowTypeInfo
 import org.apache.flink.table.api.{DataTypes, TableSchema, Types}
 import org.apache.flink.table.planner.runtime.utils.BatchTestBase.row
 import org.apache.flink.table.planner.runtime.utils.{BatchTestBase, TestData}
-import org.apache.flink.table.planner.utils.{TestFilterableTableSource, TestInputFormatTableSource, TestNestedProjectableTableSource, TestPartitionableTableSource, TestProjectableTableSource, TestTableSources}
+import org.apache.flink.table.planner.utils.{TestDataTypeTableSource, TestFilterableTableSource, TestInputFormatTableSource, TestNestedProjectableTableSource, TestPartitionableTableSource, TestProjectableTableSource, TestTableSources}
 import org.apache.flink.table.runtime.types.TypeInfoDataTypeConverter
 import org.apache.flink.types.Row
 
@@ -219,6 +219,30 @@ class TableSourceITCase extends BatchTestBase {
         row(1, "Hi"),
         row(2, "Hello"),
         row(3, "Hello world"))
+    )
+  }
+
+  @Test
+  def testDecimalSource(): Unit = {
+    val tableSchema = TableSchema.builder().fields(
+      Array("a", "b"),
+      Array(
+        DataTypes.INT(),
+        DataTypes.DECIMAL(5, 2))).build()
+    val tableSource = new TestDataTypeTableSource(
+      tableSchema, tableSchema.toRowDataType,
+      Seq(
+        row(1, new java.math.BigDecimal(5.1)),
+        row(2, new java.math.BigDecimal(6.1)),
+        row(3, new java.math.BigDecimal(7.1))
+      ))
+    tEnv.registerTableSource("MyInputFormatTable", tableSource)
+    checkResult(
+      "SELECT a, b FROM MyInputFormatTable",
+      Seq(
+        row(1, "5.10"),
+        row(2, "6.10"),
+        row(3, "7.10"))
     )
   }
 }

@@ -21,6 +21,7 @@ package org.apache.flink.table.planner.utils
 import org.apache.flink.api.common.ExecutionConfig
 import org.apache.flink.api.common.io.InputFormat
 import org.apache.flink.api.common.typeinfo.{BasicTypeInfo, TypeInformation}
+import org.apache.flink.api.common.typeutils.TypeSerializer
 import org.apache.flink.api.java.io.CollectionInputFormat
 import org.apache.flink.api.java.typeutils.RowTypeInfo
 import org.apache.flink.core.io.InputSplit
@@ -33,6 +34,7 @@ import org.apache.flink.table.functions.BuiltInFunctionDefinitions
 import org.apache.flink.table.functions.BuiltInFunctionDefinitions.AND
 import org.apache.flink.table.planner.runtime.utils.BatchTestBase.row
 import org.apache.flink.table.planner.runtime.utils.TimeTestUtil.EventTimeSourceFunction
+import org.apache.flink.table.runtime.types.TypeInfoDataTypeConverter.fromDataTypeToTypeInfo
 import org.apache.flink.table.sources._
 import org.apache.flink.table.sources.tsextractors.ExistingField
 import org.apache.flink.table.sources.wmstrategies.{AscendingTimestamps, PreserveWatermarks}
@@ -617,6 +619,27 @@ class TestInputFormatTableSource[T](
     throw new RuntimeException("Should not invoke this deprecated method.")
 
   override def getProducedDataType: DataType = fromLegacyInfoToDataType(returnType)
+
+  override def getTableSchema: TableSchema = tableSchema
+}
+
+class TestDataTypeTableSource[T](
+    tableSchema: TableSchema,
+    returnType: DataType,
+    values: Seq[T]) extends InputFormatTableSource[T] {
+
+  override def getInputFormat: InputFormat[T, _ <: InputSplit] = {
+    new CollectionInputFormat[T](
+      values.asJava,
+      fromDataTypeToTypeInfo(returnType)
+          .createSerializer(new ExecutionConfig)
+          .asInstanceOf[TypeSerializer[T]])
+  }
+
+  override def getReturnType: TypeInformation[T] =
+    throw new RuntimeException("Should not invoke this deprecated method.")
+
+  override def getProducedDataType: DataType = returnType
 
   override def getTableSchema: TableSchema = tableSchema
 }

@@ -27,10 +27,10 @@ import org.apache.flink.table.functions.BuiltInFunctionDefinitions
 import org.apache.flink.table.planner.calcite.FlinkTypeFactory
 import org.apache.flink.table.planner.expressions.RexNodeConverter
 import org.apache.flink.table.runtime.types.LogicalTypeDataTypeConverter
+import org.apache.flink.table.runtime.types.TypeInfoDataTypeConverter.fromDataTypeToTypeInfo
 import org.apache.flink.table.runtime.types.TypeInfoLogicalTypeConverter.fromTypeInfoToLogicalType
 import org.apache.flink.table.sources.{DefinedFieldMapping, DefinedProctimeAttribute, DefinedRowtimeAttributes, RowtimeAttributeDescriptor, TableSource}
 import org.apache.flink.table.types.logical.{LogicalType, TimestampKind, TimestampType, TinyIntType}
-import org.apache.flink.table.types.utils.TypeConversions.fromDataTypeToLegacyInfo
 import org.apache.flink.table.typeutils.TimeIndicatorTypeInfo
 
 import com.google.common.collect.ImmutableList
@@ -122,7 +122,7 @@ object TableSourceUtil {
         }
         idx
     }
-    val inputType = fromDataTypeToLegacyInfo(tableSource.getProducedDataType)
+    val inputType = fromDataTypeToTypeInfo(tableSource.getProducedDataType)
 
     // ensure that only one field is mapped to an atomic type
     if (!inputType.isInstanceOf[CompositeType[_]] && mapping.count(_ >= 0) > 1) {
@@ -327,7 +327,7 @@ object TableSourceUtil {
       fieldName: String,
       tableSource: TableSource[_]): (String, Int, TypeInformation[_]) = {
 
-    val returnType = fromDataTypeToLegacyInfo(tableSource.getProducedDataType)
+    val returnType = fromDataTypeToTypeInfo(tableSource.getProducedDataType)
 
     /** Look up a field by name in a type information */
     def lookupField(fieldName: String, failMsg: String): (String, Int, TypeInformation[_]) = {
